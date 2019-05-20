@@ -1,0 +1,37 @@
+---
+title: "Demonstration of risk-of-bias visualisation tools in Rmarkdown"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(robvis)
+library(knitr)
+library(kableExtra)
+library(plyr)
+data <- data_rob2
+tool <- "ROB2"
+colour <- "cochrane"
+# colour <- "colourblind"
+```
+
+## 1. Risk-of-bias written summary
+`r nrow(data) ` studies were assessed for risk of bias using the ROB2.0 assessment tool. Of those, `r nrow(data[ which(data$Overall == "Low"),]) ` studies were at overall "Low risk of bias", `r nrow(data[ which(data$Overall == "High"),]) ` were at "High risk of bias", and authors had "Some concerns" for `r nrow(data[ which(data$Overall == "Some concerns"),]) ` studies.
+
+## 2. Risk-of-bias table
+```{r cars, echo=FALSE}
+kable(data,
+          booktabs = TRUE) %>%
+          kable_styling(latex_options = "scale_down")
+```
+
+## 3. Figures
+### 3.1 Weighted summary bar plot
+```{r barplot, echo=FALSE, fig.width = 8, align = "left"}
+rob_summary(data, tool, overall = TRUE, weighted = TRUE, colour = colour)
+```
+
+### 3.2 Traffic-light plot
+```{r trafficlight, echo=FALSE, fig.height = 10}
+rob_traffic_light(data, tool, colour = colour)
+```
